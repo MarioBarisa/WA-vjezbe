@@ -16,10 +16,41 @@ const PORT = 3005;
 //git push
 
 
-app.get("/", (req, res)  => {
+app.get("/", (req, res) => {
     console.log("Pozvan je GET endpoint");
-    res.send("Pozdrav iz expressa!");
+    res.sendFile(__dirname + "/Public/index.html");
 });
+
+app.get("/about", (req, res) => {
+    console.log("Pozvan je /about endpoint"); 
+    res.sendFile(__dirname + "/Public/about.html");
+});
+
+
+let korisnici =[{ 
+    ime: "Pera",
+    prezime: "Peric",
+    godine: 30
+},{ 
+    ime: "Pera",
+    prezime: "Peric",
+    godine: 30
+},{ 
+    ime: "Pera",
+    prezime: "Peric",
+    godine: 30
+},{ 
+    ime: "Pera",
+    prezime: "Peric",
+    godine: 30
+}];
+
+ 
+app.get("/user", (req, res) => {
+    res.json(korisnici);
+});
+ 
+
 
 app.listen(PORT, (error) => {
     if (error) {
