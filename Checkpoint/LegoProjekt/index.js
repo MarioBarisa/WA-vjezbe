@@ -59,6 +59,11 @@ let legoPosebneKocke = [
     { id: 10, naziv: "Decorative Element", cijena: 6.00 }
 ];
 
+let legoSetovi = [
+    { id: 1, naziv: "Set 1", kocka: legoKocke[0], figurica: legoFigurice[1], posebnaKocka: legoPosebneKocke[2] },
+    {id: 2, naziv: "Set 2", kocka: legoKocke[4], figurica: legoFigurice[2], posebnaKocka: legoPosebneKocke[3] },
+]
+
 
 app.get("/", (req, res) => {
     console.log("Pozvan je GET ruta ");
@@ -105,4 +110,154 @@ router.delete("/figurice/:id", (req, res) => {
         return res.status(200).send("Figurica sa ID " + figID + " je obrisana.");
     }
 
- });
+});
+
+
+// ------ KOCKE
+
+router.get("/legoKocke", (req, res) => {
+    return res.status(200).json(legoKocke);
+});
+ 
+router.put("/legoKocke/", (req, res) => {
+    const idKocke = req.body.id;
+    const kocka = req.body; 
+
+    let index = -1
+    index = legoKocke.findIndex(kocka => kocka.id === parseInt(idKocke));
+
+    if (index === -1) {
+        return res.status(404).json({ error: "Kocka nije pronađena." });
+    }
+    else {
+        legoKocke[index].cijena = kocka.cijena;
+        legoKocke[index].naziv = kocka.naziv;
+        return res.status(200).send("Uspješno ažurirana kocka nzaiva: " + kocka.naziv);
+    }
+});
+
+
+router.patch("/legoKocke/promjenaEUR/:id", (req, res) => {
+    
+    const idKocke = parseInt(req.params.id);
+    const novaCijenaEUR = req.body.cijenaEUR;
+
+    let index = -1;
+    index = legoKocke.findIndex(kocka => kocka.id === idKocke);
+
+    if (index === -1) {
+        return res.status(404).send("Kocka sa ID " + idKocke + " nije pronađena.");
+    }
+    else {
+        legoKocke[index].cijena = novaCijenaEUR;
+        return res.status(200).send("Uspješno ažurirana cijena kocke sa ID " + idKocke + " na " + novaCijenaEUR + " EUR.");
+    }
+
+});
+
+router.patch("/legoKocke/promjenaNaziva/:id", (req, res) => {
+    let idKocke = -1;
+    idKocke = parseInt(req.params.id);
+
+    const noviNaziv = req.body.naziv;
+
+    if (idKocke === -1) {
+        return res.status(404).send("Kocka sa ID " + idKocke + " nije pronađena.");
+    }
+    else {
+
+        let index = -1;
+        index = legoKocke.findIndex(kocka => kocka.id === idKocke);
+        
+        legoKocke[index].naziv = noviNaziv;
+
+        return res.status(200).send("Uspješno ažuriran naziv kocke sa ID " + idKocke + " na " + noviNaziv + ".");
+        
+    }
+});
+
+
+router.post("/legoKocke", (req, res) => {
+
+    const novaKocka = req.body;
+    const index = legoKocke.length;
+
+    if (!novaKocka.naziv || !novaKocka.cijena) {
+        return res.status(400).send("Nedostaju podaci za kreiranje kocke.");
+    }
+    else {
+
+        legoKocke.push(
+            { id: index+1 , naziv: novaKocka.naziv, cijena: parseFloat(novaKocka.cijena) }
+        )
+        return res.status(200).send("Uspješno dodana nova kocka.");
+        
+    }
+})
+
+//--------- Lego Setovi
+
+
+router.get("/legoSetovi", (req, res) => {
+ 
+    const nazivSeta = req.body.naziv;
+
+    if(!nazivSeta){
+        return res.status(200).json(legoSetovi);
+    }
+    else {
+        const trazeniSet = legoSetovi.findIndex(set => set.naziv.toLowerCase() === nazivSeta.toLowerCase());
+        if(trazeniSet === -1){
+            return res.status(404).json({ error: "Set nije pronađen." });
+        }
+        else {
+            return res.status(200).json(legoSetovi[trazeniSet]);
+        }
+        
+    }
+});
+ 
+
+router.post("/legoSetovi", (req, res) => {
+    
+    const noviSet = req.body;
+
+    if(!noviSet.naziv || !noviSet.kocka || !noviSet.figurica || !noviSet.posebnaKocka){
+        return res.status(400).send("Nedostaju podaci za kreiranje seta.");
+    }
+    else {
+        const index = legoSetovi.length;
+        legoSetovi.push(
+            {
+                id: index + 1, naziv: noviSet.naziv,
+                kocka: legoKocke[noviSet.kocka-1],
+                figurica: legoFigurice[noviSet.figurica-1],
+                posebnaKocka: legoPosebneKocke[noviSet.posebnaKocka-1],
+                cijena: noviSet.cijena
+            }
+        )
+        return res.status(200).send("Uspješno dodan novi set.");
+    }
+
+})
+
+
+router.delete("/legoSetovi/:id", (req, res) => { 
+
+    const id = parseInt(req.params.id);
+
+    if (!id) {
+        return res.status(400).send("Navedite ID seta za brisanje.");
+    }
+    else {
+        const index = legoSetovi.findIndex(set => set.id === id);
+        if (index === -1) {
+            return res.status(404).send("Set nije pronađen.");
+        }
+        else {
+            legoSetovi.splice(index, 1);
+            return res.status(200).send("Set sa ID " + id + " je obrisan.");
+        }
+    }
+
+});
