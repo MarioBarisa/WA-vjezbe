@@ -50,7 +50,10 @@ global.legoPosebneKocke = [
 
 global.legoSetovi = [
     { id: 1, naziv: "Set 1", kocka: legoKocke[0], figurica: legoFigurice[1], posebnaKocka: legoPosebneKocke[2] },
-    {id: 2, naziv: "Set 2", kocka: legoKocke[4], figurica: legoFigurice[2], posebnaKocka: legoPosebneKocke[3] },
+    { id: 2, naziv: "Set 2", kocka: legoKocke[2], figurica: legoFigurice[3], posebnaKocka: legoPosebneKocke[10] },
+    { id: 3, naziv: "Set 3", kocka: legoKocke[3], figurica: legoFigurice[4], posebnaKocka: legoPosebneKocke[8] },
+    { id: 4, naziv: "Set 4", kocka: legoKocke[5], figurica: legoFigurice[8], posebnaKocka: legoPosebneKocke[3] },
+    { id: 5, naziv: "Set 5", kocka: legoKocke[11], figurica: legoFigurice[9], posebnaKocka: legoPosebneKocke[5] },
 ]
 
 const PORT = 3005;
