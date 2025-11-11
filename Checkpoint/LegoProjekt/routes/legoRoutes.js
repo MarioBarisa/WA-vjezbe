@@ -182,10 +182,6 @@ router.delete("/legoSetovi/:id", (req, res) => {
 
     const id = parseInt(req.params.id);
 
-    if (!id) {
-        return res.status(400).send("Navedite ID seta za brisanje.");
-    }
-    else {
         const index = legoSetovi.findIndex(set => set.id === id);
         if (index === -1) {
             return res.status(404).send("Set nije pronađen.");
@@ -194,7 +190,6 @@ router.delete("/legoSetovi/:id", (req, res) => {
             legoSetovi.splice(index, 1);
             return res.status(200).send("Set sa ID " + id + " je obrisan.");
         }
-    }
 
 });
 
