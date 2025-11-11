@@ -55,11 +55,16 @@ router.get("/legoKocke", (req, res) => {
     return res.status(200).json(legoKocke);
 });
  
-router.put("/legoKocke/", (req, res) => {
-    const idKocke = req.body.id;
+router.put("/legoKocke/:id", (req, res) => {
+    const idKocke = parseInt(req.params.id);
     const kocka = req.body; 
 
-    let index = -1
+    if (idKocke != null) {
+        res.status(404).send("Niste poslali broj.")
+    }
+    else {
+
+        let index = -1
     index = legoKocke.findIndex(kocka => kocka.id === parseInt(idKocke));
 
     if (index === -1) {
@@ -69,6 +74,7 @@ router.put("/legoKocke/", (req, res) => {
         legoKocke[index].cijena = kocka.cijena;
         legoKocke[index].naziv = kocka.naziv;
         return res.status(200).send("Uspješno ažurirana kocka nzaiva: " + kocka.naziv);
+    }
     }
 });
 
