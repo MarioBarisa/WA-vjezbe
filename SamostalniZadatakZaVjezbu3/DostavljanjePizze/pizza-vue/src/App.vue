@@ -3,7 +3,7 @@
 
 import Header from './components/Header.vue';
 import PizzaList from './components/PizzaList.vue';
-
+import OrderFooter from './components/OrderFooter.vue';
 </script>
 
 <template>
@@ -12,4 +12,5 @@ import PizzaList from './components/PizzaList.vue';
 
   <Header></Header>
   <PizzaList></PizzaList>
+  <OrderFooter></OrderFooter>
 </template>

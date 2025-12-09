@@ -9,21 +9,24 @@ export const pizze = [
       srednja: 9.2,
       jumbo: 16.2,
     },
-    slika_url:"https://pizzeria-tivoli.com.hr/uploads/pizza-margherita-u6kflo.jpg"
+    slika_url:
+      "https://pizzeria-tivoli.com.hr/uploads/pizza-margherita-u6kflo.jpg",
   },
   {
     id: 2,
     naziv: "Capricciosa",
     sastojci: ["rajčica", "sir", "šunka", "gljive"],
     cijene: { mala: 7.9, srednja: 9.9, jumbo: 18.0 },
-    slika_url:"https://pizzeria-tivoli.com.hr/uploads/pizza-%C5%A1unka-dajqz9.jpg"
+    slika_url:
+      "https://pizzeria-tivoli.com.hr/uploads/pizza-%C5%A1unka-dajqz9.jpg",
   },
   {
     id: 3,
     naziv: "Al Tonno",
     sastojci: ["rajčica", "sir", "tunjevina", "crveni luk"],
     cijene: { mala: 8.7, srednja: 11.7, jumbo: 21.9 },
-    slika_url:"https://pizzeria-tivoli.com.hr/uploads/pizza-vegeterijana-g6zl5e.jpg"
+    slika_url:
+      "https://pizzeria-tivoli.com.hr/uploads/pizza-vegeterijana-g6zl5e.jpg",
   },
   {
     id: 4,
@@ -38,7 +41,8 @@ export const pizze = [
       "vrhnje",
     ],
     cijene: { mala: 9.4, srednja: 12.7, jumbo: 22.2 },
-    slika_url:" https://pizzeria-tivoli.com.hr/uploads/pizza-sette-formaggi-oc1znc.jpg"
+    slika_url:
+      " https://pizzeria-tivoli.com.hr/uploads/pizza-sette-formaggi-oc1znc.jpg",
   },
   {
     id: 5,
@@ -53,7 +57,8 @@ export const pizze = [
       "crveni luk",
     ],
     cijene: { mala: 9.9, srednja: 13.2, jumbo: 22.9 },
-    slika_url: "https://pizzeria-tivoli.com.hr/uploads/pizza-contadina-cqazk9.jpg"
+    slika_url:
+      "https://pizzeria-tivoli.com.hr/uploads/pizza-contadina-cqazk9.jpg",
   },
 ];
 export const narudzbe = [

@@ -13,7 +13,10 @@ router.post("/", (req, res) => {
   let ukupna_cijena = 0;
   for (const narucena of narucene_pizze) {
     const pizza = pizze.find(
-      (p) => p.naziv.toLowerCase() === narucena.naziv.toLowerCase()
+      (p) =>
+        p.naziv &&
+        narucena.naziv &&
+        p.naziv.toLowerCase() === narucena.naziv.toLowerCase()
     );
     if (!pizza) {
       return res.status(400).json({
