@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "ime": "Ivan",
+    "prezime": "Horvat",
+    "godine_staža": 5,
+    "pozicija": "programer"
+  },
+  {
+    "id": 2,
+    "ime": "Ana",
+    "prezime": "Kovačić",
+    "godine_staza": 8,
+    "pozicija": "dizajner"
+  },
+  {
+    "id": 3,
+    "ime": "Marko",
+    "prezime": "Novak",
+    "godine_staza": 10,
+    "pozicija": "voditelj"
+  },
+  {
+    "id": 4,
+    "ime": "Petra",
+    "prezime": "Marić",
+    "godine_staza": 3,
+    "pozicija": "direktor"
+  },
+  {
+    "id": 5,
+    "ime": "Luka",
+    "prezime": "Babić",
+    "godine_staza": 2,
+    "pozicija": "programer"
+  },
+  {
+    "id": 6,
+    "ime": "Leruka",
+    "prezime": "rereBabić",
+    "godine_staza": 3,
+    "pozicija": "progsadfsdfdsramer"
+  },
+  {
+    "id": 6,
+    "ime": "Leruka",
+    "prezime": "rereBabić",
+    "godine_staza": 8,
+    "pozicija": "progsadfsdfdsramer"
+  }
+]
