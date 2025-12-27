@@ -53,8 +53,8 @@ app.post('/narudzbe', async (req, res) => {
     if (!obaveznniKljucevi.every(kljuc => Object.keys(novaNarudzba).includes(kljuc))) {
         return res.status(400).send("Nedostaju obavezni ključevi. ");
     }
-
-  let obavezniKljuceviStavke = ['naziv', 'količina', 'velicina'];
+/*
+   let obavezniKljuceviStavke = ['naziv', 'količina', 'velicina'];
 
   for (let stavka of novaNarudzba.narucene_pizze) {
       if (!obavezniKljuceviStavke.every((kljuc) => kljuc in stavka)) {
@@ -62,7 +62,7 @@ app.post('/narudzbe', async (req, res) => {
           .status(400)
           .json({ error: "Nedostaju obavezni ključevi u stavci narudžbe" });
       }
-    } 
+    } */
 
     try {
         let result = await narudzbe_collection.insertOne(novaNarudzba);
