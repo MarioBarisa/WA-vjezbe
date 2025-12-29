@@ -1,5 +1,6 @@
 <script setup>
     import { ref } from 'vue';
+    import axios from 'axios';
     
     const props = defineProps({
         odabranaPizza: {
@@ -8,16 +9,19 @@
         }
     });
     
+    const emit = defineEmits(['order-placed']);
+    
     let narucene_pizze = ref([]);
     let odabranaVelicina = ref('');
     let brojPizza = ref(1);
     
-    const prezime = ref('');
+    const ime = ref('');
     const adresa = ref('');
     const telefon = ref('');
     const greska = ref('');
-    const statusNarudzbe = ref(null); // null, 'loading', 'success', 'error'
+    const statusNarudzbe = ref(null); 
     const statusPoruka = ref('');
+    const isSubmitting = ref(false);
     
     function dodajUNarudzbu() {
         if (!odabranaVelicina.value) {
@@ -58,57 +62,53 @@
             return;
         }
         
-        if (!prezime.value || !adresa.value || !telefon.value) {
-            greska.value = 'Molimo unesite podatke za dostavu.';
+        // broj telefona -> samo brojevi
+        if (!/^\d+$/.test(telefon.value)) {
+            greska.value = 'Telefon mora sadržavati samo brojeve!';
             return;
         }
-        
+    
         greska.value = '';
         statusNarudzbe.value = 'loading';
         statusPoruka.value = 'Slanje narudžbe u tijeku...';
+        isSubmitting.value = true;
         
+        // priprema prije slanja
         const narudzba = {
-            narucene_pizze: narucene_pizze.value,
-            podaci_dostava: {
-                prezime: prezime.value,
-                adresa: adresa.value,
-                telefon: telefon.value
-            }
+            ime: ime.value,
+            adresa: adresa.value,
+            telefon: telefon.value,
+            narucene_pizze: narucene_pizze.value.map(pizza => ({
+                naziv: pizza.naziv,
+                velicina: pizza.velicina,
+                kolicina: pizza.kolicina
+            }))
         };
         
         try {
-            const response = await fetch('http://localhost:3000/narudzbe', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(narudzba)
-            });
+            const response = await axios.post(
+                'http://localhost:3005/narudzba',
+                narudzba
+            );
             
-            const data = await response.json();
+            statusNarudzbe.value = 'success';
+            statusPoruka.value = `Narudžba uspješna! Ukupna cijena: €${response.data.ukupna_cijena}`;
             
-            if (response.ok) {
-                statusNarudzbe.value = 'success';
-                statusPoruka.value = data.poruka || 'Narudžba je uspješno poslana';
-                
-                //  prazno nakon 3 sec
-                setTimeout(() => {
-                    narucene_pizze.value = [];
-                    prezime.value = '';
-                    adresa.value = '';
-                    telefon.value = '';
-                    statusNarudzbe.value = null;
-                }, 3000);
-            } else {
-                statusNarudzbe.value = 'error';
-                statusPoruka.value = data.poruka || 'Došlo je do greške u slanju narudžbe.';
-            }
-            
-            console.log('Odgovor servera:', data);
+            // brise nakon 3 sekunde?
+            setTimeout(() => {
+                narucene_pizze.value = [];
+                ime.value = '';
+                adresa.value = '';
+                telefon.value = '';
+                statusNarudzbe.value = null;
+                emit('order-placed');
+            }, 3000);
         } catch (error) {
             statusNarudzbe.value = 'error';
-            statusPoruka.value = 'Greška';
-            console.error('Greška slanju narudžbe:', error);
+            statusPoruka.value = error.response?.data?.error || 'Greška pri slanju narudžbe';
+            console.error('Greška pri narudžbi:', error);
+        } finally {
+            isSubmitting.value = false;
         }
     }
     </script>
@@ -117,7 +117,7 @@
         <footer class="fixed bottom-0 left-0 right-0 bg-slate-700/95 backdrop-blur-sm border-t border-slate-600 shadow-xl p-4 text-white max-h-[80vh] overflow-y-auto">
             <div class="max-w-7xl mx-auto space-y-4">
                 
-                <!-- Status ordera notif -->
+                <!-- obavjesti kupca -->
                 <div 
                     v-if="statusNarudzbe"
                     :class="[
@@ -219,7 +219,6 @@
                     </div>
                 </div>
     
-                <!-- INFO DOSTAVA -->
                 <div class="bg-slate-800/50 backdrop-blur-sm rounded-lg p-4 border border-slate-600">
                     <h4 class="font-bold text-lg mb-3">Podaci za dostavu:</h4>
                     <form @submit.prevent="posaljiNarudzbu" class="space-y-3">
