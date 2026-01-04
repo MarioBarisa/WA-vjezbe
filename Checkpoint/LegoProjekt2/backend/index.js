@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(legoRoutes);                                   
 
 
-/*global.legoFigurice = [
+const legoFigurice = [
     { id: 1, naziv: "Pirate", cijena: 12.00 },
     { id: 2, naziv: "Astronaut", cijena: 15.50 },
     { id: 3, naziv: "Knight", cijena: 10.00 },
@@ -21,7 +21,7 @@ app.use(legoRoutes);
     { id: 10, naziv: "Cyborg", cijena: 22.00 }
 ];
 
-global.legoKocke = [
+const legoKocke = [
     { id: 1, naziv: "Basic Brick", cijena: 0.10 },
     { id: 2, naziv: "Window", cijena: 0.50 },
     { id: 3, naziv: "Door", cijena: 0.75 },
@@ -34,7 +34,7 @@ global.legoKocke = [
     { id: 10, naziv: "Corner Brick", cijena: 0.20 }
 ];
 
-global.legoPosebneKocke = [
+const legoPosebneKocke = [
     { id: 1, naziv: "Minifigure Head", cijena: 2.00 },
     { id: 2, naziv: "Printed Tile", cijena: 3.50 },
     { id: 3, naziv: "Technic Beam", cijena: 4.00 },
@@ -48,20 +48,21 @@ global.legoPosebneKocke = [
 ];
 
 
-global.legoSetovi = [
+const legoSetovi = [
     { id: 1, naziv: "Set 1", kocka: legoKocke[0], figurica: legoFigurice[1], posebnaKocka: legoPosebneKocke[2]  },
     { id: 2, naziv: "Set 2", kocka: legoKocke[2], figurica: legoFigurice[3], posebnaKocka: legoPosebneKocke[10] },
     { id: 3, naziv: "Set 3", kocka: legoKocke[3], figurica: legoFigurice[4], posebnaKocka: legoPosebneKocke[8]  },
     { id: 4, naziv: "Set 4", kocka: legoKocke[5], figurica: legoFigurice[8], posebnaKocka: legoPosebneKocke[3]  },
     { id: 5, naziv: "Set 5", kocka: legoKocke[11], figurica: legoFigurice[9], posebnaKocka: legoPosebneKocke[5] },
 ]
-*/
+
+
 
 import { connectToDatabase } from './mongo.js';
 let db = await connectToDatabase();
 
-let pizze_cursor = await db.collection('legocollection').find();
-let pizze = await pizze_cursor.toArray();
+let lego_cursor = await db.collection('legocollection').find();
+let lego = await lego_cursor.toArray();
 
 const PORT = 3005;
 
@@ -72,6 +73,52 @@ app.listen(PORT, (error) => {
     else {
         console.log("Server sluša na portu", PORT);
     }
+})
+
+
+
+app.post('/pocetnoFigurice', async (req, res) => {
+        let lego_collection = db.collection('figurice');
+        try {
+            await lego_collection.deleteMany({});
+            let reasult = await lego_collection.insertMany(legoFigurice);
+            res.status(200).json({ insertedCount: reasult.insertedCount });
+        } catch (error) {
+            res.status(400).send(error)
+        }
+}) 
+
+app.post('/pocetnoKocke', async (req, res) => {
+    let lego_collection = db.collection('kocke');
+    try {
+        await lego_collection.deleteMany({});
+        let reasult = await lego_collection.insertMany(legoKocke);
+        res.status(200).json({ insertedCount: reasult.insertedCount });
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}) 
+
+app.post('/pocetnoLegoPosebneKocke', async (req, res) => {
+        let lego_collection = db.collection('legoPosebneKocke');
+        try {
+            await lego_collection.deleteMany({});
+            let reasult = await lego_collection.insertMany(legoPosebneKocke);
+            res.status(200).json({ insertedCount: reasult.insertedCount });
+        } catch (error) {
+            res.status(400).send(error)
+        }
+})
+
+app.post('/pocetnoLegoSetovi', async (req, res) => {
+        let lego_collection = db.collection('legoSetovi');
+        try {
+            await lego_collection.deleteMany({});
+            let reasult = await lego_collection.insertMany(legoSetovi);
+            res.status(200).json({ insertedCount: reasult.insertedCount });
+        } catch (error) {
+            res.status(400).send(error)
+        }
 })
 
 //app.use("/api", legoRoutes);
