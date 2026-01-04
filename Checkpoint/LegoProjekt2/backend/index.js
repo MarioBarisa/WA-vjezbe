@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(legoRoutes);                                   
 
 
-global.legoFigurice = [
+/*global.legoFigurice = [
     { id: 1, naziv: "Pirate", cijena: 12.00 },
     { id: 2, naziv: "Astronaut", cijena: 15.50 },
     { id: 3, naziv: "Knight", cijena: 10.00 },
@@ -55,6 +55,13 @@ global.legoSetovi = [
     { id: 4, naziv: "Set 4", kocka: legoKocke[5], figurica: legoFigurice[8], posebnaKocka: legoPosebneKocke[3]  },
     { id: 5, naziv: "Set 5", kocka: legoKocke[11], figurica: legoFigurice[9], posebnaKocka: legoPosebneKocke[5] },
 ]
+*/
+
+import { connectToDatabase } from './mongo.js';
+let db = await connectToDatabase();
+
+let pizze_cursor = await db.collection('legocollection').find();
+let pizze = await pizze_cursor.toArray();
 
 const PORT = 3005;
 
@@ -67,4 +74,4 @@ app.listen(PORT, (error) => {
     }
 })
 
-app.use("/api", legoRoutes);
+//app.use("/api", legoRoutes);
