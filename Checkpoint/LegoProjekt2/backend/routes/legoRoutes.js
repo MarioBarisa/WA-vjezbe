@@ -140,8 +140,10 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.get("/figurice/:naziv", (req, res) => {
-    const figuricaNaziv = req.params.naziv;
+  router.get("/figurice/:naziv", async (req, res) => {
+      const figuricaNaziv = req.params.naziv;
+      const collection = db.collection("figurice");
+      const legoFigurice = await collection.find().toArray();
     const trazenaFigurica = legoFigurice.find(
       (fig) => fig.naziv.toLowerCase() === figuricaNaziv.toLowerCase()
     );
@@ -153,7 +155,7 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.post("/figurice", (req, res) => {
+  router.post("/figurice", async (req, res) => {
     const { id, naziv, cijena } = req.body;
 
     if (!id || !naziv || !cijena) {
@@ -162,7 +164,8 @@ export default function createLegoRoutes(db) {
         .json({ error: "Nedostaju podaci za kreiranje figurice." });
     }
 
-    legoFigurice.push({
+      const collection = db.collection("figurice");
+      const result = await collection.insertOne({
       id: parseInt(id),
       naziv: naziv,
       cijena: parseFloat(cijena),
@@ -170,39 +173,55 @@ export default function createLegoRoutes(db) {
     return res.status(201).send("Uspješno dodana nova figurica.");
   });
 
-  router.delete("/figurice/:id", (req, res) => {
-    const figID = parseInt(req.params.id);
+  router.delete("/figurice/:id", async (req, res) => {
+      
+      const figID = parseInt(req.params.id);
+      const collection = db.collection("figurice");
+      const result = await collection.deleteOne({ id: figID });
 
-    const index = legoFigurice.findIndex((fig) => fig.id === figID);
-    if (index === -1) {
+    if (result.deletedCount===0) {
       return res.status(400).send("Figurica ne postoji.");
     } else {
-      legoFigurice.splice(index, 1);
       return res.status(200).send("Figurica sa ID " + figID + " je obrisana.");
     }
   });
 
   // ------ KOCKE
 
-  router.get("/legoKocke", (req, res) => {
-    return res.status(200).json(legoKocke);
+  router.get("/legoKocke", async (req, res) => {
+      try {
+          const collection = db.collection("kocke");
+          const legoKocke = await collection.find().toArray();
+          res.status(200).json(legoKocke);
+      } catch (error) {
+          
+          res.status(400).send("Došlo je do greške");
+        
+      }
+      
+
   });
 
-  router.put("/legoKocke/:id", (req, res) => {
+  router.put("/legoKocke/:id", async (req, res) => {
     const idKocke = parseInt(req.params.id);
     const kocka = req.body;
 
-    if (idKocke != null) {
+    if (idKocke === null) {
       res.status(404).send("Niste poslali broj.");
     } else {
+      const collection = db.collection("kocke");
+      const legoKocke = await collection.find().toArray();
       let index = -1;
       index = legoKocke.findIndex((kocka) => kocka.id === parseInt(idKocke));
 
       if (index === -1) {
         return res.status(404).json({ error: "Kocka nije pronađena." });
       } else {
-        legoKocke[index].cijena = kocka.cijena;
-        legoKocke[index].naziv = kocka.naziv;
+        const collection = db.collection("kocke");
+        const result = await collection.updateOne(
+          { id: idKocke },
+          { $set: { cijena: kocka.cijena, naziv: kocka.naziv } }
+        );
         return res
           .status(200)
           .send("Uspješno ažurirana kocka nzaiva: " + kocka.naziv);
@@ -210,19 +229,26 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.patch("/legoKocke/promjenaEUR/:id", (req, res) => {
-    const idKocke = parseInt(req.params.id);
-    const novaCijenaEUR = req.body.cijenaEUR;
+  router.patch("/legoKocke/promjenaEUR/:id", async (req, res) => {
+        const idKocke = parseInt(req.params.id);
+        const novaCijenaEUR = req.body.cijenaEUR;
 
-    let index = -1;
-    index = legoKocke.findIndex((kocka) => kocka.id === idKocke);
+        const collection = db.collection("kocke");
+        const legoKocke = await collection.find().toArray();
 
-    if (index === -1) {
-      return res
-        .status(404)
-        .send("Kocka sa ID " + idKocke + " nije pronađena.");
-    } else {
-      legoKocke[index].cijena = novaCijenaEUR;
+        let index = -1;
+        index = legoKocke.findIndex((kocka) => kocka.id === idKocke);
+
+        if (index === -1) {
+            return res
+                .status(404)
+                .send("Kocka sa ID " + idKocke + " nije pronađena.");
+        } else {
+            const collection = db.collection("kocke");
+        const result = await collection.updateOne(
+            { id: idKocke },
+            { $set: { cijena: novaCijenaEUR } }
+        );
       return res
         .status(200)
         .send(
@@ -235,21 +261,25 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.patch("/legoKocke/promjenaNaziva/:id", (req, res) => {
+  router.patch("/legoKocke/promjenaNaziva/:id", async (req, res) => {
     let idKocke = -1;
     idKocke = parseInt(req.params.id);
 
-    const noviNaziv = req.body.naziv;
-
+      const noviNaziv = req.body.naziv;
+        // JAKO LOŠ NACIN VALIDAJCIJE TREBA POPRAVITI!!!
     if (idKocke === -1) {
       return res
         .status(404)
         .send("Kocka sa ID " + idKocke + " nije pronađena.");
     } else {
-      let index = -1;
-      index = legoKocke.findIndex((kocka) => kocka.id === idKocke);
-
-      legoKocke[index].naziv = noviNaziv;
+        const collection = db.collection("kocke");
+        await collection.updateOne(
+            { id: idKocke },
+            {
+                $set: {
+                naziv: noviNaziv
+            }}
+        );
 
       return res
         .status(200)
@@ -263,30 +293,39 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.post("/legoKocke", (req, res) => {
+    router.post("/legoKocke", async (req, res) => {
+      
+        const collection = db.collection("kocke");
+        const legoKocke = await collection.find().toArray();
+
+
     const novaKocka = req.body;
-    const index = legoKocke.length;
+    const index = legoKocke.length+1;
 
     if (!novaKocka.naziv || !novaKocka.cijena) {
       return res.status(400).send("Nedostaju podaci za kreiranje kocke.");
     } else {
-      legoKocke.push({
-        id: index + 1,
-        naziv: novaKocka.naziv,
-        cijena: parseFloat(novaKocka.cijena),
-      });
+        await db.collection("kocke").insertOne({
+            id: index,
+            naziv: novaKocka.naziv,
+            cijena: parseFloat(novaKocka.cijena),
+        });
       return res.status(200).send("Uspješno dodana nova kocka.");
     }
   });
 
   //--------- Lego Setovi
 
-  router.get("/legoSetovi", (req, res) => {
+  router.get("/legoSetovi", async (req, res) => {
     const nazivSeta = req.body.naziv;
 
-    if (!nazivSeta) {
+      if (!nazivSeta) {
+          const collection = db.collection("legoSetovi");
+          const legoSetovi = await collection.find().toArray();
       return res.status(200).json(legoSetovi);
-    } else {
+      } else {
+        const collection = db.collection("legoSetovi");
+        const legoSetovi = await collection.find().toArray();
       const trazeniSet = legoSetovi.findIndex(
         (set) => set.naziv.toLowerCase() === nazivSeta.toLowerCase()
       );
@@ -298,7 +337,7 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.post("/legoSetovi", (req, res) => {
+  router.post("/legoSetovi", async (req, res) => {
     const noviSet = req.body;
 
     if (
@@ -309,8 +348,10 @@ export default function createLegoRoutes(db) {
     ) {
       return res.status(400).send("Nedostaju podaci za kreiranje seta.");
     } else {
+        const collection = db.collection("legoSetovi");
+        const legoSetovi = await collection.find().toArray();
       const index = legoSetovi.length;
-      legoSetovi.push({
+      await collection.insertOne({
         id: index + 1,
         naziv: noviSet.naziv,
         kocka: legoKocke[noviSet.kocka - 1],
@@ -322,15 +363,16 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.delete("/legoSetovi/:id", (req, res) => {
+  router.delete("/legoSetovi/:id", async (req, res) => {
     const id = parseInt(req.params.id);
-
+    const collection = db.collection("legoSetovi");
+    const legoSetovi = await collection.find().toArray();
     const index = legoSetovi.findIndex((set) => set.id === id);
     if (index === -1) {
       return res.status(404).send("Set nije pronađen.");
     } else {
-      legoSetovi.splice(index, 1);
-      return res.status(200).send("Set sa ID " + id + " je obrisan.");
+      await collection.deleteOne({ id: id });
+      return res.status(200).send(`Set sa ID ${id} je obrisan.`);
     }
   });
 
