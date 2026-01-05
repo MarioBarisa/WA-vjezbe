@@ -1,10 +1,11 @@
-
+import cors from 'cors';
 import express from "express";
 const app = express();
 import legoRoutes from "./routes/legoRoutes.js";
 
 app.use(express.json());                           
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.use(legoRoutes);                                   
 
 
