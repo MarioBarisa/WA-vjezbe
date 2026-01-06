@@ -126,26 +126,26 @@
     <div class="form-group" style="margin-bottom: 15px;">
         <label for="name">ID:</label>
         <input
-            v-model="formDataUPDATE.id"
+             v-model="formDataCIJENA.id"
             type="text"
             id="name"
-            placeholder="npr. LEGO City"
+            placeholder="npr. ID"
             required
         />
     </div>
     <div class="form-group" style="margin-bottom: 15px;">
         <label for="name">Cijena:</label>
         <input
-            v-model="formDataUPDATE.name"
+            v-model.number="formDataCIJENA.cijena"
             type="number"
             id="name"
-            placeholder="npr. LEGO City"
+            placeholder="npr. 2EUR"
             required
         />
     </div>
 
-    <button type="submit" class="btn-submit">Ažuriraj cijeu kocke</button>
-    <span v-if="message" :class="messageClass">{{ message }}</span>
+    <button type="submit" class="btn-submit">Ažuriraj cijenu kocke</button>
+    <span v-if="messageCIJENA" :class="messageClassCIJENA">{{ messageCIJENA }}</span>
 </form>
 
     </div>
