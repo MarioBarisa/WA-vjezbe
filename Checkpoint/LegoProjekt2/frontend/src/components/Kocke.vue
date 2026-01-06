@@ -304,7 +304,7 @@ const submitFormNAZIV = async () => {
 //Ažuriraj cijenu kocke
 const formDataCIJENA = ref({
     id: '',
-    cijena: '',
+    cijena: ''
     
 }); 
 

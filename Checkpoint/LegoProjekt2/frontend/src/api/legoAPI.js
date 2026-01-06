@@ -39,8 +39,8 @@ export default {
         return apiClient.patch(`/legoKocke/promjenaNaziva/${id}`, data);
     },
 
-    updateKockaCijena(id, data) {
-        return apiClient.patch(`/legoKocke/promjenaEUR/${id}`, data);
+    updateKockaCijena(id, cijenaEUR) {
+        return apiClient.patch(`/legoKocke/promjenaEUR/${id}`, cijenaEUR);
     },
 
     createKocka(data) {
