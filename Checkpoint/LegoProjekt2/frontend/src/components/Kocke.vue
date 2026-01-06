@@ -139,12 +139,12 @@
             v-model.number="formDataCIJENA.cijena"
             type="number"
             id="name"
-            placeholder="npr. LEGO City"
+            placeholder="npr. 49.99"
             required
         />
     </div>
 
-    <button type="submit" class="btn-submit">Ažuriraj cijeu kocke</button>
+    <button type="submit" class="btn-submit">Ažuriraj cijenu kocke</button>
     <span v-if="messageCIJENA" :class="messageClassCIJENA">{{ messageCIJENA }}</span>
 </form>
 
