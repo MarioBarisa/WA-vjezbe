@@ -314,6 +314,57 @@ export default function createLegoRoutes(db) {
     }
   });
 
+  // ------ POSEBNE KOCKE
+
+  router.get("/legoPosebneKocke", async (req, res) => {
+    try {
+        const collection = db.collection("legoPosebneKocke");
+        const legoKocke = await collection.find().toArray();
+        res.status(200).json(legoKocke);
+    } catch (error) {
+        
+        res.status(400).send("Došlo je do greške");
+      
+    }
+    
+
+  });
+  // QUERY PARAMETRI 
+
+  //GT
+  router.get("/legoPosebneKocke/:cijena", async (req, res) => {
+    const filterCijena = parseFloat(req.params.cijena);
+    try {
+      const collection = db.collection("legoPosebneKocke");
+      const legoKocke = await collection.find({ cijena: { $gt: filterCijena } }).toArray();
+        res.status(200).json(legoKocke);
+    } catch (error) {
+        
+        res.status(400).send("Došlo je do greške");
+      
+    }
+    
+
+  });
+  
+  //LT
+
+  router.get("/legoPosebneKockeLT/:cijena", async (req, res) => {
+    const filterCijena = parseFloat(req.params.cijena);
+    try {
+      const collection = db.collection("legoPosebneKocke");
+      const legoPosebneKocke = await collection.find({ cijena: { $lt: filterCijena } }).toArray();
+        res.status(200).json(legoPosebneKocke);
+    } catch (error) {
+        
+        res.status(400).send("Došlo je do greške");
+      
+    }
+    
+
+  });
+
+
   //--------- Lego Setovi
 
   router.get("/legoSetovi", async (req, res) => {

@@ -63,7 +63,6 @@
             v-model="formDataUPDATE.id"
             type="text"
             id="name"
-            placeholder="npr. LEGO City"
             required
         />
     </div>
@@ -73,7 +72,6 @@
             v-model="formDataUPDATE.name"
             type="text"
             id="name"
-            placeholder="npr. LEGO City"
             required
         />
     </div>
@@ -102,7 +100,6 @@
             v-model="formDataUPDATE.id"
             type="text"
             id="name"
-            placeholder="npr. LEGO City"
             required
         />
     </div>
@@ -112,7 +109,6 @@
             v-model="formDataUPDATE.name"
             type="text"
             id="name"
-            placeholder="npr. LEGO City"
             required
         />
     </div>
@@ -129,7 +125,6 @@
              v-model="formDataCIJENA.id"
             type="text"
             id="name"
-            placeholder="npr. ID"
             required
         />
     </div>
@@ -139,7 +134,6 @@
             v-model.number="formDataCIJENA.cijena"
             type="number"
             id="name"
-            placeholder="npr. 2EUR"
             required
         />
     </div>

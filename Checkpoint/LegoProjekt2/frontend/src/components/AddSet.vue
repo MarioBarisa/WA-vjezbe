@@ -6,7 +6,7 @@
             <div class="form-group">
                 <label for="name">Naziv:</label>
                 <input
-                    v-model="formData.name"
+                    v-model="formData.naziv"
                     type="text"
                     id="name"
                     placeholder="npr. LEGO City"
@@ -15,35 +15,32 @@
             </div>
 
             <div class="form-group">
-                <label for="pieces">Broj Dijelova:</label>
+                <label for="pieces">Kocka (ID)</label>
                 <input
-                    v-model.number="formData.pieces"
+                    v-model.number="formData.kocka"
                     type="number"
                     id="pieces"
-                    placeholder="npr. 500"
                     required
                 />
             </div>
 
             <div class="form-group">
-                <label for="price">Cijena ($):</label>
+                <label for="price">Figurica (ID)</label>
                 <input
-                    v-model.number="formData.price"
+                    v-model.number="formData.figurica"
                     type="number"
                     id="price"
-                    placeholder="npr. 49.99"
                     step="0.01"
                     required
                 />
             </div>
 
             <div class="form-group">
-                <label for="theme">Tema:</label>
+                <label for="theme">Posebna kocka (ID)</label>
                 <input
-                    v-model="formData.theme"
+                    v-model="formData.posebnaKocka"
                     type="text"
                     id="theme"
-                    placeholder="npr. City"
                 />
             </div>
 
@@ -58,10 +55,10 @@ import { ref } from 'vue';
 import legoAPI from '../api/legoAPI';
 
 const formData = ref({
-    name: '',
-    pieces: '',
-    price: '',
-    theme: ''
+    naziv: '',
+    kocka: '',
+    figurica: '',
+    posebnaKocka: ''
 });
 
 const message = ref('');
@@ -78,9 +75,9 @@ const submitForm = async () => {
         // Resetiraj formu
         formData.value = {
             name: '',
-            pieces: '',
-            price: '',
-            theme: ''
+            kocka: '',
+            figurica: '',
+            posebnaKocka: ''
         };
 
         // Ukloni poruku nakon 3 sekunde

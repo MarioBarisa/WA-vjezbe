@@ -47,6 +47,18 @@ export default {
         return apiClient.post('/legoKocke', data);
     },
 
+    //Posebne Kocke
+
+    getPosebneKocke() {
+        return apiClient.get('/legoPosebneKocke');
+    },
+    getPosebneKockeGT(cijena) {
+        return apiClient.get(`/legoPosebneKocke/${cijena}`)
+    },
+    getPosebneKockeLT(cijena) {
+        return apiClient.get(`/legoPosebneKockeLT/${cijena}`)
+    },
+
     // LEGO SETOVI ENDPOINTI
     getAllSetovi() {
         return apiClient.get('/legoSetovi');

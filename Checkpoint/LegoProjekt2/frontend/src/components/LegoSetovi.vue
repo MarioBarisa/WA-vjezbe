@@ -1,41 +1,41 @@
 <template>
     <div class="lego-container">
-        <h1>Posebne LEGO Kocke</h1>
+        <h1>Setovi LEGO </h1>
 
         <div v-if="loading" class="loading">Učitavanje...</div>
         <div v-if="error" class="error">{{ error }}</div>
-        <div>
-            <p>Unesite MIN cijenu:</p>
-            <input
-            type="number"
-            v-model="filterCijena"
-            placeholder="Unesite MIN cijenu"            />
-        <button @click="fetchFilteredData">Filtriraj</button>
-        </div>
-        <div>
-            <p>Unesite MAX cijenu:</p>
-            <input
-            type="number"
-            v-model="filterCijenaLT"
-            placeholder="Unesite MAX cijenu"            />
-        <button @click="fetchFilteredDataLT">Filtriraj</button>
-        </div>
 
         <table v-if="legoList.length > 0" class="lego-table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Naziv</th>
+                    <th>Kocka</th>
+                    <th>Posebna kocka</th>
+                    <th>Figurica</th>
                     <th>Cijena ($)</th>
+                    <th>Akcije</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in legoList" :key="item.id">
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.naziv }}</td>
-                    <td>${{ item.cijena }}</td>
-                </tr>
-            </tbody>
+    <tr v-for="item in legoList" :key="item.id">
+        <td>{{ item.id }}</td>
+        <td>{{ item.naziv }}</td>
+        <!-- prikazujem naziv ili crticu ako posebna kocka ( ili neš drugo ) ne postoji -->
+        <td>{{ item.kocka?.naziv || '-' }}</td>
+        <td>{{ item.posebnaKocka?.naziv || '-' }}</td>
+        <td>{{item.figurica.naziv}}</td>
+        <td>
+            ${{ ((item.kocka?.cijena || 0) + (item.posebnaKocka?.cijena || 0)+(item.figurica?.cijena || 0)).toFixed(2) }}
+        </td>
+        <td>
+            <button @click="deleteItem(item.id)" class="btn-delete">
+                            Obriši
+                        </button>
+        </td>
+    </tr>
+</tbody>
+
         </table>
 
         <p v-else class="no-data">Nema dostupnih stavki</p>
@@ -49,16 +49,13 @@ import legoAPI from '../api/legoAPI';
 const legoList = ref([]);
 const loading = ref(false);
 const error = ref(null);
-const filterCijena = ref(0);
-const filterCijenaLT = ref(0);
-
 
 const fetchData = async () => {
     loading.value = true;
     error.value = null;
 
     try {
-        const response = await legoAPI.getPosebneKocke();
+        const response = await legoAPI.getAllSetovi();
         legoList.value = response.data;
         console.log('✅ Podaci primljeni:', response.data);
     } catch (err) {
@@ -70,37 +67,16 @@ const fetchData = async () => {
 };
 
 
-const fetchFilteredData = async () => {
-    loading.value = true;
-    error.value = null;
-    try {
-        const response = await legoAPI.getPosebneKockeGT(filterCijena.value);
-        legoList.value = response.data;
-        console.log('✅ Podaci primljeni:', response.data);
-    } catch (err) {
-        error.value = `❌ Greška: ${err.message}`;
-        console.error('API greška:', err);
-    } finally {
-        loading.value = false;
+const deleteItem = async (id) => {
+    if (confirm('Sigurno obrisati?')) {
+        try {
+            await legoAPI.deleteSet(id);
+            legoList.value = legoList.value.filter(l => l.id !== id);
+        } catch (err) {
+            error.value = `❌ Greška pri brisanju: ${err.message}`;
+        }
     }
 };
-
-
-const fetchFilteredDataLT = async () => {
-    loading.value = true;
-    error.value = null;
-    try {
-        const response = await legoAPI.getPosebneKockeLT(filterCijenaLT.value);
-        legoList.value = response.data;
-        console.log('✅ Podaci primljeni:', response.data);
-    } catch (err) {
-        error.value = `❌ Greška: ${err.message}`;
-        console.error('API greška:', err);
-    } finally {
-        loading.value = false;
-    }
-};
-
 
 
 /////////////////////////

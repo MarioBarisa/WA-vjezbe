@@ -9,8 +9,8 @@
                   Pregled kocka
               </button>
               <button 
-                  @click="activeView = 'add'" 
-                  :class="{ active: activeView === 'add' }"
+                  @click="activeView = 'PosebneKocke'" 
+                  :class="{ active: activeView === 'PosebneKocke' }"
               >
                   Pregled posebnih kocka
               </button>
@@ -21,8 +21,8 @@
                   Pregled Figurica
               </button>
               <button 
-                  @click="activeView = 'addSet'" 
-                  :class="{ active: activeView === 'addSet' }"
+                  @click="activeView = 'LegoSetovi'" 
+                  :class="{ active: activeView === 'LegoSetovi' }"
               >
                   Pregled setova
               </button>
@@ -39,6 +39,8 @@
           <LegoList v-if="activeView === 'Figuricelist'" :key="refreshKey" />
           <LegoForm v-if="activeView === 'addSet'" @submitted="refreshList" />
           <LegoKocke v-if="activeView === 'kocke'" @submitted="refreshList" />
+          <PosebneKocke v-if="activeView === 'PosebneKocke'" @submitted="refreshList"/>
+          <LegoSetovi v-if="activeView === 'LegoSetovi'" @submitted="refreshList"/>
       </main>
 
       <footer>
@@ -52,6 +54,8 @@ import { ref } from 'vue';
 import LegoList from './components/FiguriceList.vue';
 import LegoForm from './components/AddSet.vue';
 import LegoKocke from './components/Kocke.vue';
+import PosebneKocke from './components/PosebneKocke.vue';
+import LegoSetovi from './components/LegoSetovi.vue';
 
 const activeView = ref('list');
 const refreshKey = ref(0);
