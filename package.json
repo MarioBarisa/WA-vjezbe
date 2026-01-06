@@ -1,5 +1,8 @@
 {
   "dependencies": {
-    "cors": "^2.8.5"
+    "@tailwindcss/vite": "^4.1.18",
+    "cors": "^2.8.5",
+    "tailwindcss": "^4.1.18",
+    "vue-router": "^4.6.4"
   }
 }
