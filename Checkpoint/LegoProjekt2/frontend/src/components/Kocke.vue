@@ -5,6 +5,14 @@
         <div v-if="loading" class="loading">Učitavanje...</div>
         <div v-if="error" class="error">{{ error }}</div>
 
+        <div>
+            <p>Unesite NAZIV kocke:</p>
+            <input
+            type="text"
+            v-model="filterNaziv"            />
+        <button @click="fetchFilteredData"> Traži kocku <i></i></button>
+        </div> 
+
         <table v-if="legoList.length > 0" class="lego-table">
             <thead>
                 <tr>
@@ -153,6 +161,9 @@ import legoAPI from '../api/legoAPI';
 const legoList = ref([]);
 const loading = ref(false);
 const error = ref(null);
+const filterNaziv = ref('');
+
+
 
 const fetchData = async () => {
     loading.value = true;
@@ -167,6 +178,17 @@ const fetchData = async () => {
         console.error('API greška:', err);
     } finally {
         loading.value = false;
+    }
+};
+
+
+const fetchFilteredData = async () => {
+    try {
+        const response = await legoAPI.legoKockeNaziv(filterNaziv.value);
+        legoList.value = response.data;
+        console.log("Uspješno filtriranje.");
+    } catch (error) {
+        console.error("Greška prilikom filtriranja:", error);
     }
 };
 

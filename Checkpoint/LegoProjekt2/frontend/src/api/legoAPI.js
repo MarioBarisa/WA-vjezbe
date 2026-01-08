@@ -47,6 +47,10 @@ export default {
         return apiClient.post('/legoKocke', data);
     },
 
+    legoKockeNaziv(naziv) {
+        return apiClient.get(`/legoKockeNaziv/${naziv}`)
+    },
+
     //Posebne Kocke
 
     getPosebneKocke() {

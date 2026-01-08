@@ -364,6 +364,22 @@ export default function createLegoRoutes(db) {
 
   });
 
+//NAZIV KOCKE
+  router.get("/legoKockeNaziv/:naziv", async (req, res) => {
+    const filterNaziv = req.params.naziv;
+    try {
+      const collection = db.collection("kocke");
+      const legoKocke = await collection.find({ naziv: filterNaziv }).toArray();
+        res.status(200).json(legoKocke);
+    } catch (error) {
+        
+        res.status(400).send("Došlo je do greške");
+      
+    }
+    
+
+  });
+
 
   //--------- Lego Setovi
 
