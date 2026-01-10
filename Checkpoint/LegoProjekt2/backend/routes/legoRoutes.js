@@ -332,7 +332,7 @@ export default function createLegoRoutes(db) {
   // QUERY PARAMETRI 
 
   //GT
-  router.get("/legoPosebneKocke/:cijena", async (req, res) => {
+  router.get("/legoPosebneKockeGT/:cijena", async (req, res) => {
     const filterCijena = parseFloat(req.params.cijena);
     try {
       const collection = db.collection("legoPosebneKocke");
