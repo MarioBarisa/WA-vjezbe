@@ -25,5 +25,15 @@ const ProvjeraGlumaca = (req, res, next) => {
     }
 };
 
+const logger = (req, res, next) => {
+    const timeStamp = new Date().toISOString();
+    console.log("Vrijeme: ", timeStamp);
+    console.log("Ruta", req.originalUrl);
+    console.log(req.method);
+    console.log(req.headers);
+    console.log(req.body);
+    next();
+};
 
-export { ProvjeraFilm, ProvjeraGlumaca };
+
+export { ProvjeraFilm, ProvjeraGlumaca, logger };
