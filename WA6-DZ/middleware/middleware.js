@@ -1,5 +1,6 @@
 import filmovi from "../data/movies.js";
 import glumci from "../data/actors.js";
+import { ExpressValidator } from "express-validator";
 
 const ProvjeraFilm = ((req, res, next) => {
     let filmId = parseInt(req.params.id);
