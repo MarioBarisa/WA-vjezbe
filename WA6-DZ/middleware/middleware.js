@@ -5,6 +5,7 @@ import { ExpressValidator } from "express-validator";
 const ProvjeraFilm = ((req, res, next) => {
     let filmId = parseInt(req.params.id);
     const film = filmovi.find(movie => filmId === movie.id);
+
     if (film) {
         res.status(200).send(film);
         next()
@@ -36,5 +37,14 @@ const logger = (req, res, next) => {
     next();
 };
 
+const provjeraIme = (req, res, next) => {
+    const name = req.query.ime?.trim(); 
+    if (typeof name === "string" && name.length > 0) {
+        next();
+    } else {
+        res.status(400).send("Ime mora biti string.");
+    }
+};
 
-export { ProvjeraFilm, ProvjeraGlumaca, logger };
+
+export { ProvjeraFilm, ProvjeraGlumaca, logger, provjeraIme };

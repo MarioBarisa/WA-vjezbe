@@ -5,18 +5,31 @@ const router = express.Router();
 
 import filmovi from "../data/movies.js";
 import glumci from "../data/actors.js";
-import { ProvjeraFilm, ProvjeraGlumaca } from "../middleware/middleware.js";
-import { check, validationResult } from "express-validator";
+import { ProvjeraFilm, ProvjeraGlumaca, provjeraIme } from "../middleware/middleware.js";
+import { check, validationResult,query } from "express-validator";
 
 
-router.get('/movies', (req, res) => {
-    res.status(200).send(filmovi);
+router.get('/movies', [
+    query('min_year').optional().isInt().withMessage('min_year mora biti integer!'),
+    query('max_year').optional().isInt().withMessage('max_year mora biti integer!')], (req, res) => {
+    
+    
+        const minYear = req.query.min_year ? parseInt(req.query.min_year, 10) : undefined;
+        const maxYear = req.query.max_year ? parseInt(req.query.max_year, 10) : undefined;
+    
+        const filmovii = filmovi.filter(movie => {
+            if (minYear !== undefined && movie.year < minYear) return false;
+            if (maxYear !== undefined && movie.year > maxYear) return false;
+            return true;
+        });
+    
+        return res.status(200).json(filmovii);
 });
 
 
 router.get('/movies/:id', [
     ProvjeraFilm,
-    check('id').isInt().withMessage('Niste poslali int!')
+    check('id').isInt().withMessage('Niste poslali int!'),
  ],(req, res) => {
 
 });
@@ -24,10 +37,10 @@ router.get('/movies/:id', [
 
 router.post('/movies', [
 
-    check('title').notEmpty().withMessage('Niste poslali sve podatke!'),
-    check('year').notEmpty().withMessage('Niste poslali sve podatke!'),
-    check('genre').notEmpty().withMessage('Niste poslali sve podatke!'),
-    check('director').notEmpty().withMessage('Niste poslali sve podatke!')
+    check('title').trim().notEmpty().escape().withMessage('Niste poslali sve title!'),
+    check('year').trim().notEmpty().escape().withMessage('Niste poslali year!'),
+    check('genre').trim().notEmpty().escape().withMessage('Niste poslali sve genre!'),
+    check('director').trim().notEmpty().escape().withMessage('Niste poslali sve dirctora!')
 
 ] ,(req, res) => {
     const errors = validationResult(req);
@@ -42,10 +55,10 @@ router.post('/movies', [
 
 router.patch('/movies/:id', [
 
-    check('title').notEmpty().withMessage('Niste poslali sve podatke!'),
-    check('year').notEmpty().withMessage('Niste poslali sve podatke!'),
-    check('genre').notEmpty().withMessage('Niste poslali sve podatke!'),
-    check('director').notEmpty().withMessage('Niste poslali sve podatke!')
+    check('title').trim().notEmpty().escape().withMessage('Niste poslali sve title!'),
+    check('year').trim().notEmpty().escape().withMessage('Niste poslali year!'),
+    check('genre').trim().notEmpty().escape().withMessage('Niste poslali sve genre!'),
+    check('director').trim().notEmpty().escape().withMessage('Niste poslali sve dirctora!')
 
 ],(req, res) => {
         const errors = validationResult(req);
@@ -66,9 +79,25 @@ router.patch('/movies/:id', [
     
 });
 
+/*
 router.get('/actors', (req, res) => {
     res.status(200).send(glumci);
+}); */
+
+router.get('/actor', provjeraIme, (req, res) => {
+    const ime = req.query.ime;
+    const error = validationResult(req);
+    if (error.isEmpty()) {
+        const glumac = glumci.find(glum => glum.name.trim().toLowerCase() === ime.trim().toLowerCase())
+        if (glumac) {
+            res.status(200).json(glumac);
+        }
+        else {
+            res.status(400).send("Glumac ne postoji."); 
+        }
+    }
 });
+
 
 
 router.get('/actors/:id', [ProvjeraGlumaca,check('id').isInt().withMessage('Niste poslali int!')],(req, res) => {
