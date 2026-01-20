@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken';
 
 const app = express();
 
@@ -83,3 +84,14 @@ app.post("/register", async (req, res) => {
     .status(201)
     .json({ message: "Korisnik uspješno registriran", user: novi_korisnik });
 });
+
+
+
+let payload = { username: 'markoMaric', email: 'markooo@gmail.com' };
+
+// random 256-bitni ključ
+//ide u .env
+let secret_key = '1b6bded687b99a58817fd80b41ca72e4dfa68087da8dac7c0a945735e525057d';
+
+let jwt_token = jwt.sign(payload, secret_key);
+console.log(jwt_token);
