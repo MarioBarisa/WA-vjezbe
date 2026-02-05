@@ -43,10 +43,6 @@ const legoKockeIDPUT = async (req, res, next) => {
     const idKocke = parseInt(req.params.id);
     const kocka = req.body;
 
-    if (idKocke === null) {
-      res.status(404).send("Niste poslali broj.");
-      
-    } else {
       const collection = global.db.collection("kocke");
       const legoKocke = await collection.find().toArray();
       let index = -1;
@@ -65,7 +61,7 @@ const legoKockeIDPUT = async (req, res, next) => {
           .status(200)
           .send("Uspješno ažurirana kocka nzaiva: " + kocka.naziv);
       }
-    }
+    
 }
 
 const postKocke = async (req, res, next) => {

@@ -1,4 +1,5 @@
 import express from "express";
+import { body, param, validationResult } from 'express-validator'; 
 const router = express.Router();
 
 
@@ -147,13 +148,18 @@ export default function createLegoRoutes(db) {
 
   });
 
-  router.post("/figurice", [autorizacijaMiddleware, adminMiddleware ,adminMiddleware] ,async (req, res) => {
+  router.post("/figurice", [autorizacijaMiddleware, adminMiddleware,
+
+    body('naziv').notEmpty().withMessage('Naziv je obavezan'),
+    body('id').notEmpty().withMessage('id je obavezan'),
+    body('cijena').notEmpty().withMessage('Cijena je obavezan')
+
+   ] ,async (req, res) => {
     const { id, naziv, cijena } = req.body;
 
-    if (!id || !naziv || !cijena) {
-      return res
-        .status(400)
-        .json({ error: "Nedostaju podaci za kreiranje figurice." });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
 
       const collection = db.collection("figurice");
@@ -184,11 +190,17 @@ export default function createLegoRoutes(db) {
 
   });
 
-  router.put("/legoKocke/:id", [autorizacijaMiddleware, adminMiddleware, legoKockeIDPUT] ,async (req, res) => {
+  router.put("/legoKocke/:id", [autorizacijaMiddleware, adminMiddleware,
+    body('idKocke').notEmpty().withMessage('Id kocke je obavezan'),
+    legoKockeIDPUT
+  ], async (req, res) => {
   
   });
 
-  router.patch("/legoKocke/promjenaEUR/:id", [autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
+  router.patch("/legoKocke/promjenaEUR/:id", [autorizacijaMiddleware, adminMiddleware,
+    body('cijenaEUR').isFloat({ min: 0 }).withMessage('Cijena mora biti pozitivan broj'),
+    body('cijenaEUR').isFloat({ max: 100 }).withMessage('Cijena mora biti manja od 100')
+   ],async (req, res) => {
         const idKocke = parseInt(req.params.id);
         const novaCijenaEUR = req.body.cijenaEUR;
 
@@ -196,7 +208,12 @@ export default function createLegoRoutes(db) {
         const legoKocke = await collection.find().toArray();
 
         let index = -1;
-        index = legoKocke.findIndex((kocka) => kocka.id === idKocke);
+    index = legoKocke.findIndex((kocka) => kocka.id === idKocke);
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
         if (index === -1) {
             return res
@@ -220,11 +237,18 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.patch("/legoKocke/promjenaNaziva/:id", [autorizacijaMiddleware, adminMiddleware] ,async (req, res) => {
+  router.patch("/legoKocke/promjenaNaziva/:id", [autorizacijaMiddleware, adminMiddleware,
+
+    body('naziv').isAlphanumeric().withMessage("Naziv mora biti tekst"),
+  ] ,async (req, res) => {
     let idKocke = -1;
     idKocke = parseInt(req.params.id);
 
-      const noviNaziv = req.body.naziv;
+    const noviNaziv = req.body.naziv;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     if (idKocke === -1) {
       return res
         .status(404)
@@ -311,7 +335,8 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.delete("/legoSetovi/:id", [autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
+  router.delete("/legoSetovi/:id", [autorizacijaMiddleware, adminMiddleware
+   ],async (req, res) => {
     const id = parseInt(req.params.id);
     const collection = db.collection("legoSetovi");
     const legoSetovi = await collection.find().toArray();
