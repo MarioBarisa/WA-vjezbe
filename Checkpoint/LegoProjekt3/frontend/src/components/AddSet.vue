@@ -69,7 +69,7 @@ const submitForm = async () => {
 
     try {
         await legoAPI.createSet(formData.value);
-        message.value = '✅ Set uspješno dodan!';
+        message.value = 'Set uspješno dodan!';
         messageClass.value = 'success';
         
         // Resetiraj formu
