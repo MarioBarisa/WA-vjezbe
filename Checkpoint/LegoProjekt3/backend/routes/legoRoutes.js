@@ -4,6 +4,8 @@ const router = express.Router();
 
 import { trazenaFigurica, legoFiguriceGET, legoKockeGET, legoKockeIDPUT, postKocke, getLegoPosebne, legoPosebneGT, legoPosebneLT, legoKockeNaziv, legoSetoviGET } from "../middleware/pretragaLego.js";
 
+import { autorizacijaMiddleware ,adminMiddleware } from "../middleware/autorizacija.js";
+
 export default function createLegoRoutes(db) {
   const router = express.Router();
 
@@ -145,7 +147,7 @@ export default function createLegoRoutes(db) {
 
   });
 
-  router.post("/figurice", async (req, res) => {
+  router.post("/figurice", [adminMiddleware] ,async (req, res) => {
     const { id, naziv, cijena } = req.body;
 
     if (!id || !naziv || !cijena) {
@@ -249,7 +251,7 @@ export default function createLegoRoutes(db) {
     }
   });
 
-    router.post("/legoKocke", [postKocke] ,async (req, res) => {
+    router.post("/legoKocke", [autorizacijaMiddleware, adminMiddleware ,postKocke] ,async (req, res) => {
       
   });
 

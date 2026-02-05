@@ -157,6 +157,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import legoAPI from '../api/legoAPI';
+import { authService } from '../../services/authService.js';
 
 const legoList = ref([]);
 const loading = ref(false);

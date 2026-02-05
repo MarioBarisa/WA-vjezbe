@@ -28,7 +28,7 @@ export const autorizacijaMiddleware = (req, res, next) => {
 
 // Admin middleware
 export const adminMiddleware = (req, res, next) => {
-    if (req.korisnik.role !== 'administrator') {
+    if (req.korisnik.role !== 'admin') {
         return res.status(403).json({ message: 'Pristup dozvoljen samo administratorima' });
     }
     return next();

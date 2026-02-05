@@ -3,7 +3,7 @@
       <header>
           <nav>
             <div v-if="isLoggedIn" class="user-info">
-              Korisnik: <strong>{{ user?.username }}</strong>
+              Korisnik: <strong><br></br>{{ user?.username }} <br></br>{{ user?.role }}</strong>
               <span v-if="user?.role === 'administrator'" class="admin-badge">(Admin)</span>
             </div>
 
@@ -94,27 +94,27 @@ import { authService } from '../services/authService.js';
 const activeView = ref('kocke');
 const refreshKey = ref(0);
 
-// Auth state
+
 const isLoggedIn = ref(false);
 const user = ref(null);
 
-// Provjeri autentifikaciju
+
 const checkAuth = () => {
   isLoggedIn.value = authService.isLoggedIn();
   user.value = authService.getCurrentUser();
 };
 
-// Logout funkcija
+
 const handleLogout = () => {
   authService.logout();
-  checkAuth(); // Osvježi state
+  checkAuth(); 
   activeView.value = 'Login';
 };
 
-// Refresh nakon login-a
+
 const handleLoginSuccess = () => {
   checkAuth();
-  activeView.value = 'kocke'; // Prebaci na glavnu stranicu
+  activeView.value = 'kocke'; 
   refreshList();
 };
 
@@ -122,7 +122,7 @@ const refreshList = () => {
   refreshKey.value++;
 };
 
-// Provjeri auth pri učitavanju
+
 onMounted(() => {
   checkAuth();
 });
