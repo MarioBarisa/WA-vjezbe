@@ -12,6 +12,7 @@ async function connectToDatabase() {
 
         const client = new MongoClient(url)
         await client.connect();
+        global.db = client.db("legoprojekt");
         console.log("Uspjeh. SPOJEN NA DB.");
         let db = client.db("legoprojekt")
         return db;
