@@ -32,6 +32,18 @@
               >
                   Dodaj Set
               </button>
+              <button 
+                  @click="activeView = 'Login'" 
+                  :class="{ active: activeView === 'Login' }"
+              >
+                  Login 
+              </button>
+              <button 
+                  @click="activeView = 'Register'" 
+                  :class="{ active: activeView === 'Register' }"
+              >
+                  Register
+              </button>
           </nav>
       </header>
 
@@ -41,10 +53,13 @@
           <LegoKocke v-if="activeView === 'kocke'" @submitted="refreshList" />
           <PosebneKocke v-if="activeView === 'PosebneKocke'" @submitted="refreshList"/>
           <LegoSetovi v-if="activeView === 'LegoSetovi'" @submitted="refreshList"/>
+          <Login v-if="activeView === 'Login'" @submitted="refreshList"/>
+          <Register v-if="activeView === 'Register'" @submitted="refreshList"/>
+
       </main>
 
       <footer>
-          <p>Checkpoint 2</p>
+          <p>Checkpoint 3</p>
       </footer>
   </div>
 </template>
@@ -56,6 +71,9 @@ import LegoForm from './components/AddSet.vue';
 import LegoKocke from './components/Kocke.vue';
 import PosebneKocke from './components/PosebneKocke.vue';
 import LegoSetovi from './components/LegoSetovi.vue';
+import Login  from './components/Login.vue';
+import Register from './components/Register.vue';
+
 
 const activeView = ref('list');
 const refreshKey = ref(0);
@@ -63,6 +81,27 @@ const refreshKey = ref(0);
 const refreshList = () => {
   refreshKey.value++;
 };
+
+
+import { authService } from '../services/authService.js';
+
+const isLoggedIn = ref(false);
+const user = ref(null);
+
+const checkAuth = () => {
+  isLoggedIn.value = authService.isLoggedIn();
+  user.value = authService.getCurrentUser();
+};
+
+const handleLogout = () => {
+  authService.logout();
+  router.push('/login');
+};
+
+
+checkAuth();
+
+
 </script>
 
 <style scoped>
