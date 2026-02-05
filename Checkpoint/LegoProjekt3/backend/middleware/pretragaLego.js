@@ -45,6 +45,7 @@ const legoKockeIDPUT = async (req, res, next) => {
 
     if (idKocke === null) {
       res.status(404).send("Niste poslali broj.");
+      
     } else {
       const collection = global.db.collection("kocke");
       const legoKocke = await collection.find().toArray();
@@ -53,6 +54,7 @@ const legoKockeIDPUT = async (req, res, next) => {
 
       if (index === -1) {
         return res.status(404).json({ error: "Kocka nije pronađena." });
+        
       } else {
         const collection = global.db.collection("kocke");
         const result = await collection.updateOne(

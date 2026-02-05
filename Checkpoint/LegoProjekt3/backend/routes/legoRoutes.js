@@ -147,7 +147,7 @@ export default function createLegoRoutes(db) {
 
   });
 
-  router.post("/figurice", [adminMiddleware] ,async (req, res) => {
+  router.post("/figurice", [autorizacijaMiddleware, adminMiddleware ,adminMiddleware] ,async (req, res) => {
     const { id, naziv, cijena } = req.body;
 
     if (!id || !naziv || !cijena) {
@@ -165,7 +165,7 @@ export default function createLegoRoutes(db) {
     return res.status(201).send("Uspješno dodana nova figurica.");
   });
 
-  router.delete("/figurice/:id", async (req, res) => {
+  router.delete("/figurice/:id",[autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
       
       const figID = parseInt(req.params.id);
       const collection = db.collection("figurice");
@@ -184,11 +184,11 @@ export default function createLegoRoutes(db) {
 
   });
 
-  router.put("/legoKocke/:id", [legoKockeIDPUT] ,async (req, res) => {
+  router.put("/legoKocke/:id", [autorizacijaMiddleware, adminMiddleware, legoKockeIDPUT] ,async (req, res) => {
   
   });
 
-  router.patch("/legoKocke/promjenaEUR/:id", async (req, res) => {
+  router.patch("/legoKocke/promjenaEUR/:id", [autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
         const idKocke = parseInt(req.params.id);
         const novaCijenaEUR = req.body.cijenaEUR;
 
@@ -220,7 +220,7 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.patch("/legoKocke/promjenaNaziva/:id", async (req, res) => {
+  router.patch("/legoKocke/promjenaNaziva/:id", [autorizacijaMiddleware, adminMiddleware] ,async (req, res) => {
     let idKocke = -1;
     idKocke = parseInt(req.params.id);
 
@@ -285,7 +285,7 @@ export default function createLegoRoutes(db) {
 
   });
 
-  router.post("/legoSetovi", async (req, res) => {
+  router.post("/legoSetovi", [autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
     const noviSet = req.body;
 
     if (
@@ -311,7 +311,7 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  router.delete("/legoSetovi/:id", async (req, res) => {
+  router.delete("/legoSetovi/:id", [autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
     const id = parseInt(req.params.id);
     const collection = db.collection("legoSetovi");
     const legoSetovi = await collection.find().toArray();
