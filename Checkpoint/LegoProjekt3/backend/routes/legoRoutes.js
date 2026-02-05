@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 
+
 import { trazenaFigurica, legoFiguriceGET, legoKockeGET, legoKockeIDPUT, postKocke, getLegoPosebne, legoPosebneGT, legoPosebneLT, legoKockeNaziv, legoSetoviGET } from "../middleware/pretragaLego.js";
 
 export default function createLegoRoutes(db) {
