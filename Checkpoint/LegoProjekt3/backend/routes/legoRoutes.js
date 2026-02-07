@@ -100,8 +100,6 @@ export default function createLegoRoutes(db) {
     }
   });
 
-  
-
   router.post("/pocetnoKocke", async (req, res) => {
     let lego_collection = db.collection("kocke");
     try {
@@ -284,29 +282,27 @@ export default function createLegoRoutes(db) {
   router.get("/legoPosebneKocke", [getLegoPosebne] ,async (req, res) => {
 
   });
+
+
   // QUERY PARAMETRI 
 
   //GT
   router.get("/legoPosebneKockeGT/:cijena", [legoPosebneGT] ,async (req, res) => {
-
   });
   
   //LT
 
   router.get("/legoPosebneKockeLT/:cijena", [legoPosebneLT] ,async (req, res) => {
-
   });
 
 //NAZIV KOCKE
   router.get("/legoKockeNaziv/:naziv", [legoKockeNaziv] ,async (req, res) => {
-
   });
 
 
   //--------- Lego Setovi
 
   router.get("/legoSetovi", [legoSetoviGET] , async (req, res) => {
-
   });
 
   router.post("/legoSetovi", [autorizacijaMiddleware, adminMiddleware ],async (req, res) => {
