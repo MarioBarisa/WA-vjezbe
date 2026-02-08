@@ -2,6 +2,7 @@ import express from "express";
 
 import { connectToDatabase } from "./db.js";
 import router from "./routes/drinks.js";
+import usersRoutes from "./routes/users.js";
 
 const app = express();
 const logger = (req, res, next) => {
@@ -17,6 +18,7 @@ const logger = (req, res, next) => {
 app.use(logger);
 app.use(express.json());
 app.use(router);
+app.use(usersRoutes)
 
 const db = await connectToDatabase(); // primjer korištenja asinkrone funkcije za spajanje na bazu podataka
 
