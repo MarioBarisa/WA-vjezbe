@@ -3,6 +3,7 @@ const router = express.Router();
 import bcrypt from "bcryptjs";
 
 import { body, query, param, check, validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 import { connectToDatabase } from "../db.js";
 let db = await connectToDatabase();
 
@@ -83,8 +84,13 @@ router.post("/login", async (req, res) => {
   try {
     const uspjeh = await checkPassword(password, user.password);
 
-    if (uspjeh) {
-      return res.status(200).send("Uspješan login.");
+      if (uspjeh) {
+          const token = jwt.sign(
+              { username: user.username },
+              process.env.JWT_SECRET,
+              {expiresIn:'1h'}
+          )
+      return res.status(200).send(token);
     } else {
       return res.status(404).send("Kriva lozinka ili username.");
     }

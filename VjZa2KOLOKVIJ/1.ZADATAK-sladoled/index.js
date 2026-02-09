@@ -3,6 +3,7 @@ import express from "express";
 import { connectToDatabase } from "./db.js";
 import router from "./routes/drinks.js";
 import usersRoutes from "./routes/users.js";
+import { authenticateToken } from "./middleware/middleware.js";
 
 const app = express();
 const logger = (req, res, next) => {
@@ -15,6 +16,7 @@ const logger = (req, res, next) => {
   next();
 };
 
+//app.use(authenticateToken);
 app.use(logger);
 app.use(express.json());
 app.use(router);

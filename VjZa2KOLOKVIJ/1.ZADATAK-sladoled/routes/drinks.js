@@ -3,7 +3,7 @@ const router = express.Router();
 
 import { connectToDatabase } from '../db.js';
 import { ObjectId } from "mongodb";
-import { validateDrink } from "../middleware/middleware.js";
+import { validateDrink, authenticateToken } from "../middleware/middleware.js";
 import { body } from "express-validator";
 let db = await connectToDatabase();
 
@@ -110,7 +110,7 @@ router.post('/drinksMany', [validateDrink],async (req, res) => {
 
 
 
-router.get('/drinks', async (req, res) => {
+router.get('/drinks', [authenticateToken] ,async (req, res) => {
   
     try {
         let drinks_collection = db.collection('drinks');
@@ -123,7 +123,7 @@ router.get('/drinks', async (req, res) => {
 });
 
 
-router.get('/drinks/:id', async (req, res) => {
+router.get('/drinks/:id', [authenticateToken] ,async (req, res) => {
     let drinks_collection = db.collection('drinks');
     let drinkID = req.params.id;
     try {
