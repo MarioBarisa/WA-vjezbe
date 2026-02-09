@@ -8,6 +8,9 @@ import { ObjectId } from "mongodb";
 
 
 import { fa, faker } from "@faker-js/faker";
+import { findUserById } from "../middleware/middleware.js";
+
+
 function createRandomUser() {
   return {
     username: faker.internet.username(),
@@ -41,23 +44,8 @@ router.get('/fake', async (req, res) => {
     }
 });
 
-router.get('/fake/:id', async (req, res) => {
-    let idFake = req.params.id;
+router.get('/fake/:id', [findUserById] ,async (req, res) => {
 
-    let faker_collection = db.collection('faker');
-    
-    try {
-        let fake = await faker_collection.findOne({ _id: new ObjectId(idFake) });
-        
-        if (!fake) {
-            return res.status(404).send("Korisnik nije pronađen.");
-        }
-        
-        res.status(200).json(fake);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Greška na serveru");
-    }
 });
 
 router.delete('/fake/:id', async (req, res) => {
